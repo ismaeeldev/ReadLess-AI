@@ -98,6 +98,7 @@ export default function UploadBox({ canUpload }) {
             await new Promise((resolve) => setTimeout(resolve, 5000));
 
             toast.dismiss(readingToastId);
+            console.log("🔍 PDF text fetched..." + res[0].ufsUrl);
             summaryToastId = toast.loading("🧠 Parsing and summarizing with AI…");
             const summary = await generatePdfSummary(res);
 

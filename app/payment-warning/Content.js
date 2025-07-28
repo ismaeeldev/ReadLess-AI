@@ -9,7 +9,7 @@ export default function PaymentWarning() {
   const link = searchParams.get("link");
 
   const handleManualRedirect = () => {
-    if (link) window.location.href = link;
+    if (link) window.open(link, "_blank", "noopener,noreferrer");
   };
 
   return (

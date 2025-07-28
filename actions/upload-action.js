@@ -20,7 +20,7 @@ export async function generatePdfSummary(response) {
     }
 
     const { name, ufsUrl } = response[0];
-    // console.log(name, ufsUrl)
+    console.log(name, ufsUrl)
 
     if (!ufsUrl) {
         return {
@@ -31,6 +31,7 @@ export async function generatePdfSummary(response) {
     }
 
     try {
+        console.log("🔍 Fetching PDF text..." + ufsUrl);
         const pdfText = await fetchAndExtractPdf(ufsUrl);
 
         const modelFallbacks = [
