@@ -15,6 +15,7 @@
     "@langchain/community": "^0.3.49",
     "@langchain/core": "^0.3.66",
     "@neondatabase/serverless": "^0.10.4",
+    "@netlify/next": "^1.4.9",
     "@next/bundle-analyzer": "^15.4.4",
     "@next/font": "^14.2.15",
     "@radix-ui/react-dialog": "^1.1.14",
