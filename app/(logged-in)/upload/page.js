@@ -1,3 +1,6 @@
+
+export const dynamic = 'force-dynamic';
+
 import React from 'react'
 import BgGradient from '@/components/common/bg-gradient'
 import UploadHeader from '@/components/upload/UploadHeader'

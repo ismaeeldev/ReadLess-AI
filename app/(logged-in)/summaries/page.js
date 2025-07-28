@@ -6,7 +6,7 @@ import Summaries from '@/components/summaries/Summaries'
 import PremiumRestriction from '@/components/summaries/PremiumRestriction'
 import { getCurrentUserPlan } from '@/lib/db'
 
-const page = () => {
+const Page = () => {
     const [userPlan, setUserPlan] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -56,4 +56,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

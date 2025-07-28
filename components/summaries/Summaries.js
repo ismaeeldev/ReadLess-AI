@@ -22,7 +22,7 @@ const Summaries = () => {
     const [hasMore, setHasMore] = useState(true);
     const loaderRef = useRef();
 
-    const fetchSummaries = useCallback(async (reset = false) => {
+    const fetchSummaries = useCallback(async (reset = false, currentPage) => {
         setLoading(true);
         setError(null);
         try {
@@ -32,7 +32,7 @@ const Summaries = () => {
                 setPage(1);
                 setHasMore(allSummaries.length > PAGE_SIZE);
             } else {
-                const nextPage = page + 1;
+                const nextPage = currentPage + 1;
                 const newSummaries = allSummaries.slice(0, nextPage * PAGE_SIZE);
                 setSummaries(newSummaries);
                 setPage(nextPage);
@@ -42,14 +42,17 @@ const Summaries = () => {
             setError('Failed to load summaries.');
         }
         setLoading(false);
-    }, [page]);
+    }, []);
+
 
     useEffect(() => {
-        fetchSummaries(true);
-    }, []);
+        fetchSummaries(true, page);
+    }, [fetchSummaries]);
+
 
     useEffect(() => {
         if (!hasMore || loading) return;
+
         const observer = new IntersectionObserver(
             entries => {
                 if (entries[0].isIntersecting) {
@@ -58,13 +61,18 @@ const Summaries = () => {
             },
             { threshold: 1 }
         );
-        if (loaderRef.current) {
-            observer.observe(loaderRef.current);
+
+        const currentLoader = loaderRef.current;
+
+        if (currentLoader) {
+            observer.observe(currentLoader);
         }
+
         return () => {
-            if (loaderRef.current) observer.unobserve(loaderRef.current);
+            if (currentLoader) observer.unobserve(currentLoader);
         };
     }, [hasMore, loading, fetchSummaries]);
+
 
     const handleDeleteClick = useCallback((id) => {
         setDeleteId(id);
