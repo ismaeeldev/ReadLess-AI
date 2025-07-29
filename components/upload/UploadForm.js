@@ -87,39 +87,62 @@ export default function UploadBox({ canUpload }) {
     };
 
     const handleFileSubmit = async () => {
-        let summaryToastId;
         setError(null);
+        let summaryToastId = null;
+        let readingToastId = null;
+
+        if (!file) {
+            toast.error("No file selected.");
+            return;
+        }
 
         try {
             setLoading(true);
+            // Upload the file
             const res = await startUpload([file]);
-            setLoading(false);
-            const readingToastId = toast.loading("📄 Reading PDF...");
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-
-            toast.dismiss(readingToastId);
-            console.log("🔍 PDF text fetched..." + res[0].ufsUrl);
-            summaryToastId = toast.loading("🧠 Parsing and summarizing with AI…");
-            const summary = await generatePdfSummary(res);
-            console.log("🔍 Summary Received" + summary);
-
-            if (!summary) {
-                throw new Error("Summary returned undefined or empty.");
+            if (!res || !res[0] || !res[0].ufsUrl) {
+                throw new Error("File upload failed or invalid response.");
             }
 
-            const savedSummary = await savePdfSummary({ original_file_url: res[0].ufsUrl, summary_text: summary, title: generateTitleFromName(res[0].name), file_name: generateFilenameFromName(res[0].name) })
+            // Show reading toast
+            readingToastId = toast.loading("📄 Reading PDF...");
+            // Simulate reading delay (could be removed or reduced)
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            toast.dismiss(readingToastId);
 
-            console.log("🔍 Summary saved..." + savedSummary);
+            console.log("🔍 PDF text fetched...", res[0].ufsUrl);
 
-            if (!isMounted.current) return;
-            setAIResponse(summary);
-            setDisplayedText("");
-            setIndex(0);
-            setIsTyping(true);
-            toast.success("✅ Summary generated!", {
-                id: summaryToastId,
-            });
+            // Show summarizing toast
+            summaryToastId = toast.loading("🧠 Parsing and summarizing with AI…");
 
+            // Generate summary
+            const result = await generatePdfSummary(res);
+            console.log("🔍 Result Received");
+
+            if (result && result.success) {
+                // Save summary
+                const savedSummary = await savePdfSummary({
+                    original_file_url: res[0].ufsUrl,
+                    summary_text: result.data,
+                    title: generateTitleFromName(res[0].name),
+                    file_name: generateFilenameFromName(res[0].name)
+                });
+                console.log("🔍 Summary saved...");
+
+                // Update UI
+                setAIResponse(result.data);
+                setDisplayedText("");
+                setIndex(0);
+                setIsTyping(true);
+
+                toast.success("✅ Summary generated!", {
+                    id: summaryToastId,
+                });
+            } else {
+                toast.error(result?.message || "Failed to generate summary.", {
+                    id: summaryToastId,
+                });
+            }
         } catch (err) {
             console.error("Error during upload/summary:", err);
 
@@ -127,10 +150,14 @@ export default function UploadBox({ canUpload }) {
                 toast.error("❌ Summary failed. Try again.", {
                     id: summaryToastId,
                 });
+            } else if (readingToastId) {
+                toast.error("❌ Reading PDF failed. Try again.", {
+                    id: readingToastId,
+                });
             } else {
                 toast.error("❌ Upload failed. Try again.");
             }
-            setError(err.message || "Something went wrong.");
+            setError(err?.message || "Something went wrong.");
         } finally {
             setLoading(false);
         }
