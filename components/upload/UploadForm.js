@@ -101,6 +101,7 @@ export default function UploadBox({ canUpload }) {
             console.log("🔍 PDF text fetched..." + res[0].ufsUrl);
             summaryToastId = toast.loading("🧠 Parsing and summarizing with AI…");
             const summary = await generatePdfSummary(res);
+            console.log("🔍 Summary Received" + summary);
 
             if (!summary) {
                 throw new Error("Summary returned undefined or empty.");

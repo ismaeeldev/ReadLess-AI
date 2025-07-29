@@ -31,8 +31,8 @@ export async function generatePdfSummary(response) {
     }
 
     try {
-        console.log("🔍 Fetching PDF text..." + ufsUrl);
         const pdfText = await fetchAndExtractPdf(ufsUrl);
+        console.log("PDF text Received from langChain", pdfText)
 
         const modelFallbacks = [
             { name: "Together", fn: getSummaryFromTogether },
@@ -45,8 +45,9 @@ export async function generatePdfSummary(response) {
 
         for (const model of modelFallbacks) {
             try {
+                console.log(`🔍 ${model.name} fetching...`)
                 const summary = await model.fn(pdfText);
-                console.log(`✅ ${model.name} success`);
+                console.log(`✅ ${model.name} success ||   ${summary}`);
                 return summary;
             } catch (error) {
                 console.error(`❌ ${model.name} Error:`, error?.message || error);
