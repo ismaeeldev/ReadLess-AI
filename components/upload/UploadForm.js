@@ -315,7 +315,11 @@ export default function UploadBox({ canUpload }) {
                     accept=".pdf"
                     onChange={handleFileChange}
                     disabled={loading || canUpload === false}
-                    className=" rounded-2xl p-1 flex-1 text-sm file:text-gray-600 file:border-none file:bg-white file:mr-2 file:cursor-pointer w-full"
+                    className="w-full bg-none text-gray-500 rounded-lg p-1  cursor-pointer
+                    file:mr-4 file:mb-2 file:py-1   file:px-2 file:text-sm
+                    file:bg-white file:text-gray-700 file:border-none
+                    file:rounded-lg file:font-medium
+                    hover:file:bg-none "
                 />
                 {loading ? (
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
