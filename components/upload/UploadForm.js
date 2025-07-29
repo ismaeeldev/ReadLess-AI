@@ -108,6 +108,8 @@ export default function UploadBox({ canUpload }) {
 
             const savedSummary = await savePdfSummary({ original_file_url: res[0].ufsUrl, summary_text: summary, title: generateTitleFromName(res[0].name), file_name: generateFilenameFromName(res[0].name) })
 
+            console.log("🔍 Summary saved..." + savedSummary);
+
             if (!isMounted.current) return;
             setAIResponse(summary);
             setDisplayedText("");
