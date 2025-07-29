@@ -1,10 +1,12 @@
-// 'use client';
 import { Toaster } from 'sonner';
 import { Source_Sans_3 as FontSans } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
 import { ClerkProvider } from "@clerk/nextjs";
+import TopLoaderClient from "@/components/common/TopLoaderClient";
+
+
 
 const fontSans = FontSans({
   variable: "--font-sans",
@@ -20,6 +22,8 @@ export const metadata = {
 
 
 export default function RootLayout({ children }) {
+
+
   return (
     <ClerkProvider >
 
@@ -31,6 +35,7 @@ export default function RootLayout({ children }) {
           className={`${fontSans.variable} font-sans  antialiased`}
         >
           <div className="relative flex flex-col min-h-screen">
+            <TopLoaderClient />
             <Header />
             <main className="flex-1">
               {children}

@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { handleCheckoutSessionCompleted, handleSubscriptionDeleted } from "@/lib/db";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-import { toast } from "sonner";
 
 export const POST = async (req) => {
     const payload = await req.text();
